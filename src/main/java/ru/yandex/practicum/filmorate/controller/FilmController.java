@@ -1,8 +1,8 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
-import exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -27,12 +27,13 @@ public class FilmController {
     // добавление фильма
     @PostMapping
     public Film addMovie(@RequestBody Film film) {
+        log.info("Запрос на добавление фильма.");
         if (film.getName().isBlank()) {
             log.debug("Отсутствует название фильма!");
             throw new ValidationException("Отсутствует название фильма!");
         }
         if (film.getDescription().length() > 200) {
-            log.debug("Слишком длинное описание!");
+            log.debug("Слишком длинное описание фильма!");
             throw new ValidationException("Слишком длинное описание фильма!");
         }
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
@@ -51,7 +52,13 @@ public class FilmController {
     // обновление фильма
     @PutMapping
     public Film updateMovie(@RequestBody Film film) {
-        listFilms.replace(film.getId(), film);
+        log.info("Введен запрос на изменение фильма.");
+        if (!listFilms.containsKey(film.getId())) { //если список фильмов не содержит фильм с данным id
+            log.debug("Несуществующий id!");
+            throw new ValidationException("Нет фильма с таким id!");
+        } else {
+            listFilms.replace(film.getId(), film);
+        }
         return film;
     }
 

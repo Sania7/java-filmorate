@@ -1,8 +1,8 @@
-package controller;
+package ru.yandex.practicum.filmorate.controller;
 
-import exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import model.User;
+import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,6 +21,8 @@ public class UserController {
     // создать пользователя
     @PostMapping
     public User createUser(@RequestBody User user) {
+        // получен запрос на добавление пользователя
+        log.debug("Получен запрос на создание пользователя!");
         // проверка email,
         if (!user.getEmail().contains("@")) {
             log.debug("Ошибка, введен некорректный формат email!");
