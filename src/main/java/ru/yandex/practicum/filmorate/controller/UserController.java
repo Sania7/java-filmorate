@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.model.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,22 +21,10 @@ public class UserController {
 
     // создать пользователя
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         // получен запрос на добавление пользователя
         log.debug("Получен запрос на создание пользователя!");
-        // проверка email,
-        if (!user.getEmail().contains("@")) {
-            log.debug("Ошибка, введен некорректный формат email!");
-            throw new ValidationException("Ошибка, введен некорректный формат email!");
-        }
-        // проверка логина
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.debug("Введена не верная дата!");
-            throw new ValidationException("Введена неверная дата!");
-        }
+        validation(user);
         user.setId(getNewId());
         userList.put(user.getId(), user);
         return user;
@@ -43,7 +32,8 @@ public class UserController {
 
     // обновление пользователя
     @PutMapping
-    public User userUpdate(@RequestBody User user) {
+    public User userUpdate(@Valid @RequestBody User user) {
+        log.info("Получен запрос на обновление пользователя!");
         if (!userList.containsKey(user.getId())) {
             log.debug("Введен неверный id!");
             throw new ValidationException("Вы ввели не существующий id!");
@@ -57,6 +47,24 @@ public class UserController {
     @GetMapping
     public Collection<User> getListAllUsers() {
         return userList.values();
+    }
+
+    private void validation(User user) {
+        if (!user.getEmail().contains("@")) {
+            throw new ValidationException("Ошибка, введен некорректный формат email!");
+        }
+        if (user.getEmail().isEmpty() || user.getEmail().contains(" ")) {
+            throw new ValidationException("Введите email адрес без пробелов!");
+        }
+        if (user.getLogin().isEmpty() && user.getLogin().contains(" ")) {
+            throw new ValidationException("Ошибка! Введите логин без пробелов!");
+        }
+        if (user.getName() == null) {
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("Введена неверная дата рождения!");
+        }
     }
 
     public User getUser(Integer id) {

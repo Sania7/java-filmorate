@@ -14,7 +14,7 @@ class FilmControllerTest {
     // добавить фильм с пустым названием
     void addMovieWhenEmptyTitle() {
         FilmController filmController = new FilmController();
-        Film film = new Film();
+        Film film = new Film("name","description", LocalDate.of(2020,3,11));
         film.setDescription("Каникулы в простоквашино.");
         film.setReleaseDate(LocalDate.of(1980, 2, 15));
         film.setDuration(15);
@@ -25,7 +25,7 @@ class FilmControllerTest {
     // когда описание фильма длинне 200 символов
     void addMovieWhenTooLongDescription() {
         FilmController filmController = new FilmController();
-        Film film = new Film();
+        Film film = new Film("name","description", LocalDate.of(2020,3,11));
         film.setName("title");
         film.setDescription("sfsdfsdfsdfsdfsdfsdfsdfsdvfbghtrhthdfbcfgdrgdrggdggrggththjfghfthergdfdfgdgdfgdfgdfgdfgdfgbjghn" +
                 "bgfjfgjfgjndfghfgjgkdgtjhfghsfgnfgmghmhgmghmdghmnhgmghmghmghmghmjgytdsergergdfbdfsbdfbnfgmngfmttgncfgnmf" +
@@ -42,7 +42,7 @@ class FilmControllerTest {
     // добавить фильм когда неправильная дата тест
     void addMovieWhenDateIncorrectTest() {
         FilmController filmController = new FilmController();
-        Film film = new Film();
+        Film film = new Film("name","description", LocalDate.of(2020,3,11));
         film.setName("title");
         film.setDescription("Каникулы в простокавашино");
         film.setReleaseDate(LocalDate.of(1234,11,22));
@@ -54,17 +54,17 @@ class FilmControllerTest {
     // обновить фильм
     void updateFilmTest() {
         FilmController filmController = new FilmController();
-        Film film = new Film();
+        Film film = new Film("name","description", LocalDate.of(2020,3,11));
         film.setName("title");
         film.setDescription("Каникулы в простоквашино.");
-        film.setReleaseDate(LocalDate.of(1980,2,15));
+        film.setReleaseDate(LocalDate.of(1986,2,15));
         film.setDuration(15);
         filmController.addMovie(film);
-        Film updatedMovie = new Film();
+        Film updatedMovie = new Film("name","description", LocalDate.of(2019,3,11));
         updatedMovie.setId(1);
         updatedMovie.setName("name");
         updatedMovie.setDescription("Кавказская пленница.");
-        updatedMovie.setReleaseDate(LocalDate.of(1967,4,1));
+        updatedMovie.setReleaseDate(LocalDate.of(1989,4,1));
         updatedMovie.setDuration(95);
         filmController.updateMovie(updatedMovie);
         assertEquals("name",filmController.getId(1).getName());
