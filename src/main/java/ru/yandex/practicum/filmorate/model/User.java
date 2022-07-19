@@ -12,7 +12,7 @@ public class User {
     private String email;
     @NotNull
     private String login;
-    //@NotNull
+    @NotNull
     private String name;
     @NotNull
     private LocalDate birthday;

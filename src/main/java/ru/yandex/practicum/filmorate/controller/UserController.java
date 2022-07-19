@@ -59,7 +59,7 @@ public class UserController {
         if (user.getLogin().isEmpty() && user.getLogin().contains(" ")) {
             throw new ValidationException("Ошибка! Введите логин без пробелов!");
         }
-        if (user.getName() == null) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {

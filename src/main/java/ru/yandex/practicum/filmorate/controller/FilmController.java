@@ -19,19 +19,13 @@ public class FilmController {
     // хранилище фильмов
     private HashMap<Integer, Film> listFilms = new HashMap<>();
 
-    private final static LocalDate MIN_RELEASE_DATE =  LocalDate.of(1985,12,28);
+    private static final LocalDate MIN_RELEASE_DATE =  LocalDate.of(1895,12,28);
     private int newId = 0;
-
-    // получение всех фильмов
-    @GetMapping
-    public Collection<Film> getListAllMovies() {
-        return listFilms.values();
-    }
 
     // добавление фильма
     @PostMapping
-    public Film addMovie(@Valid @RequestBody Film film) {
-        log.info("Запрос на добавление фильма.");
+    public Film addMovie(@RequestBody Film film) {
+        log.info("Запрос на добавление фильма." + film);
         validation(film);
         film.setId(getNewId());
         listFilms.put(film.getId(), film);
@@ -40,15 +34,20 @@ public class FilmController {
 
     // обновление фильма
     @PutMapping
-    public Film updateMovie(@Valid @RequestBody Film film) {
-        log.info("Введен запрос на изменение фильма.");
+    public Film updateMovie(@RequestBody Film film) {
+        log.info("Введен запрос на изменение фильма." + film);
         if (!listFilms.containsKey(film.getId())) { //если список фильмов не содержит фильм с данным id
             log.debug("Несуществующий id!");
             throw new ValidationException("Нет фильма с таким id!");
-        } else {
-            listFilms.replace(film.getId(), film);
         }
+        listFilms.replace(film.getId(), film);
         return film;
+    }
+
+    // получение всех фильмов
+    @GetMapping
+    public Collection<Film> getListAllMovies() {
+        return listFilms.values();
     }
 
     private void validation(Film film) {
