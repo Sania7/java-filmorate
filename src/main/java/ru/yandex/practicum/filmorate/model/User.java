@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
