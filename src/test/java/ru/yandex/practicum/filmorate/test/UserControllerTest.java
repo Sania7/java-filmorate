@@ -14,7 +14,7 @@ class UserControllerTest {
     // когда неверный емайл
     void addUserWhenWrongEmailTest() {
         UserController userController = new UserController();
-        User user = new User("email","login",LocalDate.of(1977,8,5));
+        User user = new User();
         user.setEmail("mail.ru");
         user.setLogin("login");
         user.setName("name");
@@ -26,7 +26,7 @@ class UserControllerTest {
     // когда дата из будующего
     void addUserWhenWrongDateTest() {
         UserController userController = new UserController();
-        User user = new User("@email","login",LocalDate.of(2277,8,5));
+        User user = new User();
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
         user.setName("name");
@@ -38,7 +38,7 @@ class UserControllerTest {
     // когда имя пустое
     void addUserWhenBlankNameTest() {
         UserController userController = new UserController();
-        User user = new User("@email","login",LocalDate.of(1977,8,5));
+        User user = new User();
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
         user.setBirthday(LocalDate.of(1977,8,5));
@@ -50,13 +50,13 @@ class UserControllerTest {
     // когда обновление user
     void whenUpdateUserTest() {
         UserController userController = new UserController();
-        User user = new User("@email","login",LocalDate.of(1977,8,5));
+        User user = new User();
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
         user.setName("name");
         user.setBirthday(LocalDate.of(1977,8,5));
         userController.createUser(user);
-        User updateUser = new User("@email","login",LocalDate.of(1977,8,5));
+        User updateUser = new User();
         updateUser.setId(1);
         updateUser.setEmail("kord@yandex.ru");
         updateUser.setLogin("nextLogin");
