@@ -17,14 +17,14 @@ import java.util.HashMap;
 public class FilmController {
 
     // хранилище фильмов
-    private HashMap<Integer, Film> listFilms = new HashMap<>();
+    private final HashMap<Integer, Film> listFilms = new HashMap<>();
 
     private static final LocalDate MIN_RELEASE_DATE =  LocalDate.of(1895,12,28);
     private int newId = 0;
 
     // добавление фильма
     @PostMapping
-    public Film addMovie(@RequestBody Film film) {
+    public Film addMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на добавление фильма." + film);
         validation(film);
         film.setId(getNewId());
@@ -34,7 +34,7 @@ public class FilmController {
 
     // обновление фильма
     @PutMapping
-    public Film updateMovie(@RequestBody Film film) {
+    public Film updateMovie(@Valid @RequestBody Film film) {
         log.info("Введен запрос на изменение фильма." + film);
         if (!listFilms.containsKey(film.getId())) { //если список фильмов не содержит фильм с данным id
             log.debug("Несуществующий id!");
