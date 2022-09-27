@@ -94,18 +94,6 @@ public class InMemoryUserStorage implements UserStorage {
         users.get(id).deleteFriend(friendId);
         users.get(friendId).deleteFriend(id);
     }
-
-//    @Override
-//    public void addLike(Integer id, Integer userId) {
-//
-//    }
-//
-//    @Override
-//    public void removeLike(Integer id, Integer userId) {
-//
-//    }
-
-
     private int generateId() { // метод генерации id пользователя
         return ++newId;
     }

@@ -2,12 +2,15 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
@@ -38,7 +41,7 @@ public class FilmService {
     }
 
 
-    public Film addMovie(Film film) { // добавить фильм
+    public Film addMovie(@NotNull Film film) { // добавить фильм
         validation(film);
         inMemoryFilmStorage.addFilm(film);
         return film;
@@ -54,6 +57,7 @@ public class FilmService {
 
 
     public Film getFilm(Integer id) { // получить фильм по id
+        checkFilmById(id);
         return inMemoryFilmStorage.getFilm(id);
     }
 
@@ -69,12 +73,25 @@ public class FilmService {
 
 
     public void removeLike(Integer id, Integer userId) { // удалить лайк
+        checkFilmById(id);
+        checkUserById(userId);
         inMemoryFilmStorage.deleteLike(id,userId);
     }
 
 
-    public boolean checkFilmById(Integer id) { // проверить фильм по id
-        return inMemoryFilmStorage.checkFilmById(id);
+    public void checkFilmById(Integer id) { // проверить фильм по id
+        if (!inMemoryFilmStorage.checkFilmById(id)) {
+            log.debug("Неверный id фильма {} ", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Нет фильма с таким id");
+        }
+        inMemoryFilmStorage.checkFilmById(id);
+    }
+
+    public void checkUserById(Integer id) {
+        if (!inMemoryUserStorage.checkUserById(id)) {
+            log.debug("Не существует пользователя с таким id {}",id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
 

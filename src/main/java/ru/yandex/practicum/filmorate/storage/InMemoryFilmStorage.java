@@ -72,7 +72,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public boolean checkUserById(Integer userId) { // проверить пользователя по id
         return movies.containsKey(userId);
     }
-
+    // метод генерации id фильма
     private int generateId() { // метод генерации id фильма
         return ++newId;
     }

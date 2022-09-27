@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -40,7 +42,7 @@ public class UserService {
 
     // обновить пользователя
     public User updateUser(User user) {
-        checkUserById(user.getId());
+        checkId(user.getId());
         validation(user);
         inMemoryUserStorage.updateUser(user);
         return user;
@@ -48,7 +50,7 @@ public class UserService {
 
     // получить пользователя по id
     public User getUser(Integer id) {
-        checkUserById(id);
+        checkId(id);
         return inMemoryUserStorage.getUser(id);
     }
 
@@ -59,21 +61,21 @@ public class UserService {
 
     // получить всех друзей по id
     public Set<User> getAllFriendsByUserId(Integer id) {
-        checkUserById(id);
+        checkId(id);
         return inMemoryUserStorage.getAllFriendsByUserId(id);
     }
 
     // получить создать нового друга
     public Set<User> getMutualFriends(Integer id, Integer otherId) {
-        checkUserById(id);
-        checkUserById(otherId);
+        checkId(id);
+        checkId(otherId);
         return inMemoryUserStorage.getMutualFriends(id, otherId);
     }
 
     // добавить друга
     public void addFriend(Integer id, Integer friendId) {
-        checkUserById(id);
-        checkUserById(friendId);
+        checkId(id);
+        checkId(friendId);
         inMemoryUserStorage.addFriend(id, friendId);
     }
 
@@ -86,6 +88,7 @@ public class UserService {
 
     public void validation(User user) {
         if (!user.getEmail().contains("@")) {
+            log.debug("Неверный формат емейла {}", user.getEmail());
             throw new ValidationException("Ошибка, введен некорректный формат email!");
         }
         if (user.getEmail().isEmpty() || user.getEmail().contains(" ")) {
@@ -98,19 +101,16 @@ public class UserService {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.debug("Неверная дата рождения {}", user.getBirthday());
             throw new ValidationException("Введена неверная дата рождения!");
         }
     }
 
-
-//    // добавить лайк
-//    public void addLike(Integer id, Integer userId) {
-//        inMemoryUserStorage.addLike(id, userId);
-//    }
-//
-//    // удалить лайк
-//    public void removeLike(Integer id, Integer userId) {
-//        inMemoryUserStorage.removeLike(id, userId);
-//    }
+    public void checkId(Integer id) {
+        if (!inMemoryUserStorage.checkUserById(id)) {
+            log.debug("Нет пользователя с таким id {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Нет пользователя с таким id");
+        }
+    }
 }
 
