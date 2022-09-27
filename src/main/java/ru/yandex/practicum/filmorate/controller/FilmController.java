@@ -2,13 +2,12 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Set;
 
 
 @Slf4j
@@ -16,61 +15,61 @@ import java.util.HashMap;
 @RequestMapping("/films")
 public class FilmController {
 
-    // хранилище фильмов
-    private final HashMap<Integer, Film> listFilms = new HashMap<>();
+    private final FilmService filmService;
 
-    private static final LocalDate MIN_RELEASE_DATE =  LocalDate.of(1895,12,28);
-    private int newId = 0;
 
-    // добавление фильма
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
+
+    // 1.получение списка всех фильмов
+    @GetMapping
+    public Collection<Film> getListAllMovies() {
+        return filmService.getMovies();
+    }
+
+
+
+    // 2.добавление фильма
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на добавление фильма." + film);
-        validation(film);
-        film.setId(getNewId());
-        listFilms.put(film.getId(), film);
+        filmService.addMovie(film);
         return film;
     }
 
-    // обновление фильма
+    // 3.обновление фильма
     @PutMapping
     public Film updateMovie(@Valid @RequestBody Film film) {
         log.info("Введен запрос на изменение фильма." + film);
-        if (!listFilms.containsKey(film.getId())) { //если список фильмов не содержит фильм с данным id
-            log.debug("Несуществующий id!");
-            throw new ValidationException("Нет фильма с таким id!");
-        }
-        listFilms.replace(film.getId(), film);
+        filmService.updateMovie(film);
         return film;
     }
 
-    // получение всех фильмов
-    @GetMapping
-    public Collection<Film> getListAllMovies() {
-        return listFilms.values();
+    // 4.добавить лайк
+    @PutMapping("/{id}/like/{userId}")
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        filmService.addLike(id,userId);
+        //userService.addLike(id,userId);
     }
 
-    private void validation(Film film) {
-        if (film.getName().isBlank()) {
-            throw new ValidationException("Отсутствует название фильма!");
-        }
-        if (film.getDescription().length() > 200) {
-            throw new ValidationException("Слишком длинное описание фильма!");
-        }
-        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
-            throw new ValidationException("Неверная дата выхода фильма!");
-        }
-        if (film.getDuration() < 0) {
-            throw new ValidationException("Продолжительность фильма неверная!");
-        }
+    // 5.удалить лайк
+    @DeleteMapping("{id}/like/{userId}")
+    public void removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        filmService.removeLike(id, userId);
+        //.removeLike(id, userId);
     }
 
-
-    public Film getId(Integer id) {
-        return listFilms.get(id);
+    // 6.получить фильм по id
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable Integer id) {
+        log.info("Запрос фильма {}", id);
+        return filmService.getFilm(id);
     }
 
-    private int getNewId() {
-        return ++newId;
+    // 7.получить популярные фильмы count = 10
+    @GetMapping("/popular")
+    public Set<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
+        return filmService.getPopularFilms(count);
     }
 }

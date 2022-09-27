@@ -3,17 +3,20 @@ package ru.yandex.practicum.filmorate.test;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserControllerTest {
 
     @Test
     // когда неверный емайл
     void addUserWhenWrongEmailTest() {
-        UserController userController = new UserController();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         User user = new User();
         user.setEmail("mail.ru");
         user.setLogin("login");
@@ -25,7 +28,7 @@ class UserControllerTest {
     @Test
     // когда дата из будующего
     void addUserWhenWrongDateTest() {
-        UserController userController = new UserController();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         User user = new User();
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
@@ -37,10 +40,11 @@ class UserControllerTest {
     @Test
     // когда имя пустое
     void addUserWhenBlankNameTest() {
-        UserController userController = new UserController();
         User user = new User();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
+        user.setName("");
         user.setBirthday(LocalDate.of(1977,8,5));
         userController.createUser(user);
         assertEquals("login", userController.getUser(1).getName());
@@ -49,7 +53,7 @@ class UserControllerTest {
     @Test
     // когда обновление user
     void whenUpdateUserTest() {
-        UserController userController = new UserController();
+        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
         User user = new User();
         user.setEmail("bob@yandex.ru");
         user.setLogin("login");
