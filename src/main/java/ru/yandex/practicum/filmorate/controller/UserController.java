@@ -1,28 +1,25 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
+
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-
-
-    @Autowired // конструктор
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
 
     @GetMapping // 1.получить список всех пользователей
     public Collection<User> getListAllUsers() {
@@ -35,6 +32,7 @@ public class UserController {
     public User createUser(@Valid @RequestBody User user) {
         // получен запрос на добавление пользователя
         log.info("Получен запрос на создание пользователя!");
+        validation(user);
         userService.addUser(user);
         return user;
     }
@@ -43,6 +41,7 @@ public class UserController {
     @PutMapping // 3.обновление пользователя
     public User userUpdate(@Valid @RequestBody User user) {
         log.info("Получен запрос на обновление пользователя!");
+        validation(user);
         userService.updateUser(user);
         return user;
     }
@@ -50,6 +49,7 @@ public class UserController {
 
     @GetMapping("/{id}") // 4.получить пользователя по id
     public User getUser(@PathVariable Integer id) {
+
         return userService.getUser(id);
     }
 
@@ -75,6 +75,27 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}") // 8.удалить друга
     public void removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+
         userService.removeFriend(id, friendId);
+    }
+
+    public void validation(User user) {
+        if (!user.getEmail().contains("@")) {
+            log.debug("Неверный формат емейла {}", user.getEmail());
+            throw new ValidationException("Ошибка, введен некорректный формат email!");
+        }
+        if (user.getEmail().isEmpty() || user.getEmail().contains(" ")) {
+            throw new ValidationException("Введите email адрес без пробелов!");
+        }
+        if (user.getLogin().isEmpty() && user.getLogin().contains(" ")) {
+            throw new ValidationException("Ошибка! Введите логин без пробелов!");
+        }
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.debug("Неверная дата рождения {}", user.getBirthday());
+            throw new ValidationException("Введена неверная дата рождения!");
+        }
     }
 }
