@@ -3,10 +3,8 @@ package ru.yandex.practicum.filmorate.storage;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -54,31 +52,44 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Set<User> getAllFriendsByUserId(Integer id) { // получить всех друзей пользователя по id
-        Set<User> friends = new HashSet<>();
-        for (Integer ids : users.get(id).getFriends()) {
-            friends.add(users.get(ids));
-        }
-        return friends;
+        return users.get(id).getFriends().stream()
+                .map(users::get)
+                .collect(Collectors.toSet());
+
+//        Set<User> friends = new HashSet<>();
+//        for (Integer ids : users.get(id).getFriends()) {
+//            friends.add(users.get(ids));
+//        }
+//        return friends;
     }
 
 
     @Override
     public Set<User> getMutualFriends(Integer id, Integer otherId) { // завести общих друзей
+
+
         Set<Integer> userFriendsIds = users.get(id).getFriends();
         Set<Integer> otherUserFriendsIds = users.get(otherId).getFriends();
-        Set<Integer> mutualFriendsIds = new HashSet<>();
-        for (Integer friendId : userFriendsIds) {
-            for (Integer otherFriendId : otherUserFriendsIds) {
-                if (friendId.equals(otherFriendId)) {
-                    mutualFriendsIds.add(friendId);
-                }
-            }
-        }
-        Set<User> mutualFriends = new HashSet<>();
-        for (Integer mfId : mutualFriendsIds) {
-            mutualFriends.add(users.get(mfId));
-        }
-        return mutualFriends;
+        return otherUserFriendsIds.stream()
+                .filter(userFriendsIds::contains)
+                .map(users::get)
+                .collect(Collectors.toSet());
+
+
+
+//        Set<Integer> mutualFriendsIds = new HashSet<>();
+//        for (Integer friendId : userFriendsIds) {
+//            for (Integer otherFriendId : otherUserFriendsIds) {
+//                if (friendId.equals(otherFriendId)) {
+//                    mutualFriendsIds.add(friendId);
+//                }
+//            }
+//        }
+//        Set<User> mutualFriends = new HashSet<>();
+//        for (Integer mfId : mutualFriendsIds) {
+//            mutualFriends.add(users.get(mfId));
+//        }
+//        return mutualFriends;
     }
 
 

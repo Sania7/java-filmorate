@@ -2,16 +2,14 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -45,7 +43,7 @@ public class FilmService {
     }
 
 
-    public Set<Film> getPopularFilms(int count) { // получить количество популярных фильмов
+    public List<Film> getPopularFilms(int count) { // получить количество популярных фильмов
         return filmStorage.getPopularFilms(count);
     }
 

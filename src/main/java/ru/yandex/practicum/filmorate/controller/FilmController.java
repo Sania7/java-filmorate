@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -73,7 +74,7 @@ public class FilmController {
 
     // 7.получить популярные фильмы count = 10
     @GetMapping("/popular")
-    public Set<Film> getPopularFilms(@RequestParam (defaultValue = "10", required = false) @Positive int count) {
+    public List<Film> getPopularFilms(@RequestParam (defaultValue = "10", required = false) @Positive int count) {
         return filmService.getPopularFilms(count);
     }
 

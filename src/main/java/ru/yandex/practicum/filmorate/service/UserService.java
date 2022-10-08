@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -73,7 +74,7 @@ public class UserService {
     public void checkId(Integer id) {
         if (!userStorage.checkUserById(id)) {
             log.debug("Нет пользователя с таким id {}", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Нет пользователя с таким id");
+            throw new ObjectNotFoundException("Нет пользователя с таким id");
         }
     }
 }

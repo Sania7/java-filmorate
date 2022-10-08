@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 
 public interface FilmStorage { // класс интерфейс хранилище фильмов
@@ -21,7 +21,7 @@ public interface FilmStorage { // класс интерфейс хранилищ
     Film getFilm(Integer id); // палучить фильм по id
 
 
-    Set<Film> getPopularFilms(int count); // получить количество популярных фильмов
+    List<Film> getPopularFilms(int count); // получить количество популярных фильмов
 
 
     void addLike(Integer id, Integer userId); // добавить лайк
