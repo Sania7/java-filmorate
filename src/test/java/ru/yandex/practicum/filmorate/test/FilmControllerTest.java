@@ -49,16 +49,6 @@ class FilmControllerTest {
         film.setDuration(15);
         assertThrows(ValidationException.class, () -> filmController.addMovie(film));
     }
-    @Test
-    void addMovieWhenWrongDurationTest() {
-        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
-        Film film = new Film();
-        film.setName("name");
-        film.setDescription("про маленького мальчика");
-        film.setReleaseDate(LocalDate.of(2005, 9, 15));
-        film.setDuration(-12);
-        assertThrows(RuntimeException.class, () -> filmController.addMovie(film));
-    }
 
     @Test
     // обновить фильм
