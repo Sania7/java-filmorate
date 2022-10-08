@@ -49,15 +49,6 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .sorted(Comparator.comparing(Film::getLikes).reversed().thenComparing(Film::getId))
                 .limit(count)
                 .collect(Collectors.toList());
-
-
-//        List<Film> listFilms = new ArrayList<>(movies.values());
-//        TreeSet<Film> popularFilms = new TreeSet<>(Comparator.comparing(Film::getId).thenComparing(Film::getLikes).reversed());
-//        popularFilms.addAll(listFilms);
-//        while (popularFilms.size() > count) {
-//            popularFilms.pollLast();
-//        }
-//        return popularFilms;
     }
 
 
@@ -77,9 +68,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return movies.containsKey(id);
     }
 
-    public boolean checkUserById(Integer userId) { // проверить пользователя по id
-        return movies.containsKey(userId);
-    }
+
     // метод генерации id фильма
     private int generateId() { // метод генерации id фильма
         return ++newId;

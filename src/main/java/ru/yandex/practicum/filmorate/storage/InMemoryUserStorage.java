@@ -55,12 +55,6 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(id).getFriends().stream()
                 .map(users::get)
                 .collect(Collectors.toSet());
-
-//        Set<User> friends = new HashSet<>();
-//        for (Integer ids : users.get(id).getFriends()) {
-//            friends.add(users.get(ids));
-//        }
-//        return friends;
     }
 
 
@@ -74,22 +68,6 @@ public class InMemoryUserStorage implements UserStorage {
                 .filter(userFriendsIds::contains)
                 .map(users::get)
                 .collect(Collectors.toSet());
-
-
-
-//        Set<Integer> mutualFriendsIds = new HashSet<>();
-//        for (Integer friendId : userFriendsIds) {
-//            for (Integer otherFriendId : otherUserFriendsIds) {
-//                if (friendId.equals(otherFriendId)) {
-//                    mutualFriendsIds.add(friendId);
-//                }
-//            }
-//        }
-//        Set<User> mutualFriends = new HashSet<>();
-//        for (Integer mfId : mutualFriendsIds) {
-//            mutualFriends.add(users.get(mfId));
-//        }
-//        return mutualFriends;
     }
 
 
