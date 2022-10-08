@@ -17,11 +17,9 @@ public class User {
     private int id; // id юзера
 
     @Email
-    @NotNull
     private String email; // email юзера
 
     @NotBlank
-    @NotNull
     private String login; // login юзера
 
     private String name; // имя юзера

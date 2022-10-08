@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.test;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
@@ -38,18 +39,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void addMovieWhenWrongDurationTest() {
-        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
-        Film film = new Film();
-        film.setName("name");
-        film.setDescription("про маленького мальчика");
-        film.setReleaseDate(LocalDate.of(2005, 9, 15));
-        film.setDuration(-12);
-        assertThrows(RuntimeException.class, () -> filmController.addMovie(film));
-    }
-
-    @Test
-    // добавить фильм когда неправильная дата тест
+        // добавить фильм когда неправильная дата тест
     void addMovieWhenDateIncorrectTest() {
         FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
         Film film = new Film();
@@ -57,6 +47,16 @@ class FilmControllerTest {
         film.setDescription("Каникулы в простокавашино");
         film.setReleaseDate(LocalDate.of(1234,11,22));
         film.setDuration(15);
+        assertThrows(ValidationException.class, () -> filmController.addMovie(film));
+    }
+    @Test
+    void addMovieWhenWrongDurationTest() {
+        FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+        Film film = new Film();
+        film.setName("name");
+        film.setDescription("про маленького мальчика");
+        film.setReleaseDate(LocalDate.of(2005, 9, 15));
+        film.setDuration(-12);
         assertThrows(RuntimeException.class, () -> filmController.addMovie(film));
     }
 

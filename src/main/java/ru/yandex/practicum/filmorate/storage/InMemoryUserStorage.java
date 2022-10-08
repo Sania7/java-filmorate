@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class InMemoryUserStorage implements UserStorage {
 
 
-    private final HashMap<Integer, User> users = new HashMap<>(); // хранилище пользоватeлей
+    private final Map<Integer, User> users = new HashMap<>(); // хранилище пользоватeлей
 
 
     private int newId = 0; // счетчик
@@ -19,7 +19,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Collection<User> getUsers() { // получить всех пользователей
-        return users.values();
+        return new ArrayList<>(users.values());
     }
 
 
@@ -60,7 +60,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Set<User> getMutualFriends(Integer id, Integer otherId) { // завести общих друзей
-
 
         Set<Integer> userFriendsIds = users.get(id).getFriends();
         Set<Integer> otherUserFriendsIds = users.get(otherId).getFriends();

@@ -9,33 +9,8 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserControllerTest {
-
-    @Test
-    // когда неверный емайл
-    void addUserWhenWrongEmailTest() {
-        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
-        User user = new User();
-        user.setEmail("mail.ru");
-        user.setLogin("login");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(1977,8,5));
-        assertThrows(RuntimeException.class, () -> userController.createUser(user));
-    }
-
-    @Test
-    // когда дата из будующего
-    void addUserWhenWrongDateTest() {
-        UserController userController = new UserController(new UserService(new InMemoryUserStorage()));
-        User user = new User();
-        user.setEmail("bob@yandex.ru");
-        user.setLogin("login");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(2024,11,7));
-        assertThrows(RuntimeException.class,() -> userController.createUser(user));
-    }
 
     @Test
     // когда имя пустое

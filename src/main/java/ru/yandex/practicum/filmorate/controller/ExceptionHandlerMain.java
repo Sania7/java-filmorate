@@ -2,12 +2,15 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ExceptionResponse;
+
+import javax.validation.ConstraintViolationException;
 
 
 
@@ -40,6 +43,20 @@ public class ExceptionHandlerMain {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse handleThrowable(final Throwable e) {
         log.info("500: {}", e.getMessage());
+        return new ExceptionResponse("Произошла ошибка" + e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse methodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        log.info("400: {}", e.getMessage());
+        return new ExceptionResponse("Произошла ошибка" + e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse сonstraintViolationException(final ConstraintViolationException e) {
+        log.info("400: {}", e.getMessage());
         return new ExceptionResponse("Произошла ошибка" + e.getMessage());
     }
 }

@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 public class InMemoryFilmStorage implements FilmStorage {
 
 
-    private final HashMap<Integer, Film> movies = new HashMap<>(); // хранилище фильмов
+    private final Map<Integer, Film> movies = new HashMap<>(); // хранилище фильмов
 
     private int newId = 0; // счетчик
 
 
     @Override
     public Collection<Film> getFilms() { // получить все фильмы
-        return movies.values();
+        return new ArrayList<>(movies.values());
     }
 
 

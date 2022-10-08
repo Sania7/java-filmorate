@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
@@ -75,27 +74,18 @@ public class UserController {
 
     @DeleteMapping("/{id}/friends/{friendId}") // 8.удалить друга
     public void removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
-
         userService.removeFriend(id, friendId);
     }
 
     public void validation(User user) {
-        if (!user.getEmail().contains("@")) {
-            log.debug("Неверный формат емейла {}", user.getEmail());
-            throw new ValidationException("Ошибка, введен некорректный формат email!");
-        }
-        if (user.getEmail().isEmpty() || user.getEmail().contains(" ")) {
+        if (user.getEmail().contains(" ")) {
             throw new ValidationException("Введите email адрес без пробелов!");
         }
-        if (user.getLogin().isEmpty() && user.getLogin().contains(" ")) {
+        if (user.getLogin().contains(" ")) {
             throw new ValidationException("Ошибка! Введите логин без пробелов!");
         }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.debug("Неверная дата рождения {}", user.getBirthday());
-            throw new ValidationException("Введена неверная дата рождения!");
         }
     }
 }

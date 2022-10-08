@@ -78,12 +78,12 @@ public class FilmController {
     }
 
     public void validation(Film film) { // валидация фильма перед созданием
-
         if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             throw new ValidationException("Неверная дата выхода фильма!");
         }
-        if (film.getDuration() < 0) {
-            throw new ValidationException("Продолжительность фильма неверная!");
-        }
+
+//        if (film.getDuration() < 0) {
+//            throw new ValidationException("Продолжительность фильма неверная!");
+//        }
     }
 }
